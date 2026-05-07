@@ -63,6 +63,10 @@ def is_valid(url):
         if not any(domain == d or domain.endswith(d) for d in allowed_domains):
             return False
         
+        crashing_dirs = ['~lboyles', '~alirezs1', '~rvernica', '~sjavanma', '~yonghuaw']
+        if any(dir_name in parsed.path for dir_name in crashing_dirs):
+            return False
+
         defunct_subdomains = {
             'ibook.ics.uci.edu', 'cybert.ics.uci.edu', 
             'tippers.ics.uci.edu', 'auge.ics.uci.edu'
@@ -88,13 +92,20 @@ def is_valid(url):
             '/day/',
             '/month/',
             '/week/',
-            '/events/page/'
+            '/events/page/',
+            'marvin_wsgi_application.py','JMEPopupWeb.py', 'parentForm=', 
+            'filter%5B', 'filter[', 'enews-volume', 'search=', 'keywords=', 
+            'orderby=', 'sort=', 'order='
         ]
 
         if any(trap in url.lower() for trap in trap_patterns):
             return False
         
-        if re.search(r'/page/\d{3,}', url) or 'baldipage=' in url.lower():
+        page_match = re.search(r'/page/(\d+)', url.lower())
+        if page_match and int(page_match.group(1)) > 10:
+            return False
+
+        if 'baldipage=' in url.lower():
             return False
 
         if len(url) > 150:
