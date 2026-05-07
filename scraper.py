@@ -1,6 +1,7 @@
 import re
 from urllib.parse import urlparse, urljoin
 from bs4 import BeautifulSoup
+from analytics import analytics
 
 def scraper(url, resp):
     links = extract_next_links(url, resp)
@@ -23,6 +24,9 @@ def extract_next_links(url, resp):
 
     try:
         soup = BeautifulSoup(resp.raw_response.content, 'lxml')
+
+        text_content = soup.get_text(separator=' ', strip=True)
+        analytics.process_page(url, text_content)
 
         for link in soup.find_all('a'):
             href = link.get('href')
@@ -58,7 +62,7 @@ def is_valid(url):
 
         if not any(domain == d or domain.endswith(d) for d in allowed_domains):
             return False
-            
+
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
