@@ -16,7 +16,7 @@ def main(config_file, restart):
 
     try:
         crawler.start()
-    except: KeyboardInterrupt:
+    except KeyboardInterrupt:
         print("\nCrawler was stopped by user")
     finally:
         analytics.print_report()
