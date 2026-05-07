@@ -64,13 +64,20 @@ def is_valid(url):
             return False
         
         trap_patterns = [
-            'doku.php',
-            'events/list',
-            'calendar',
-            'action=',
-            'share=',
-            'version=',
-            '?replytocom='
+            'doku.php',      
+            'events/list',   
+            'calendar',      
+            'action=',       
+            'share=',        
+            'version=',      
+            '?replytocom=',  
+            'ical=',
+            'outlook-ical=',
+            'mac-ical=',
+            '/day/',
+            '/month/',
+            '/week/',
+            '/events/page/'
         ]
 
         if any(trap in url.lower() for trap in trap_patterns):
