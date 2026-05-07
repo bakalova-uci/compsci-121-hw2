@@ -63,6 +63,17 @@ def is_valid(url):
         if not any(domain == d or domain.endswith(d) for d in allowed_domains):
             return False
         
+        defunct_subdomains = {
+            'ibook.ics.uci.edu', 'cybert.ics.uci.edu', 
+            'tippers.ics.uci.edu', 'auge.ics.uci.edu'
+        }
+
+        if domain in defunct_subdomains:
+            return False
+        
+        if re.search(r'\?C=[NMSD];O=[AD]', url):
+            return False
+
         trap_patterns = [
             'doku.php',      
             'events/list',   
@@ -82,7 +93,10 @@ def is_valid(url):
 
         if any(trap in url.lower() for trap in trap_patterns):
             return False
-            
+        
+        if re.search(r'/page/\d{3,}', url) or 'baldipage=' in url.lower():
+            return False
+
         if len(url) > 150:
             return False
             
@@ -98,7 +112,7 @@ def is_valid(url):
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv"
-            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())
+            + r"|rm|smil|wmv|swf|wma|zip|rar|gz|py|psp|seq|bib|nb|sql|apk|img|war)$", parsed.path.lower())
 
     except TypeError:
         print ("TypeError for ", parsed)
