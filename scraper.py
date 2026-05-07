@@ -62,6 +62,13 @@ def is_valid(url):
 
         if not any(domain == d or domain.endswith(d) for d in allowed_domains):
             return False
+        
+        trap_patterns = ['do=edit', 'do=export_pdf', 'do=login', 'do=index', 'do=recent', 'action=']
+        if any(trap in parsed.query for trap in trap_patterns):
+            return False
+            
+        if len(url) > 200:
+            return False
 
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
