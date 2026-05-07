@@ -63,11 +63,24 @@ def is_valid(url):
         if not any(domain == d or domain.endswith(d) for d in allowed_domains):
             return False
         
-        trap_patterns = ['do=edit', 'do=export_pdf', 'do=login', 'do=index', 'do=recent', 'action=']
-        if any(trap in parsed.query for trap in trap_patterns):
+        trap_patterns = [
+            'doku.php',
+            'events/list',
+            'calendar',
+            'action=',
+            'share=',
+            'version=',
+            '?replytocom='
+        ]
+
+        if any(trap in url.lower() for trap in trap_patterns):
             return False
             
-        if len(url) > 200:
+        if len(url) > 150:
+            return False
+            
+        path_segments = parsed.path.strip('/').split('/')
+        if len(path_segments) > 10:
             return False
 
         return not re.match(
