@@ -14,7 +14,7 @@ class CrawlerAnalytics:
     def _load_stopwords(self, filepath):
         stop_words = set()
         try:
-            with open(filepath, 'r', enconding='utf-8') as f:
+            with open(filepath, 'r', encoding='utf-8') as f:
                 for line in f:
                     word = line.strip().lower()
                     if word:
