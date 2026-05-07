@@ -40,5 +40,21 @@ class CrawlerAnalytics:
         domain = parsed_url.netloc.lower()
         if domain.endswith("ics.uci.edu"):
             self.subdomains[domain] += 1
+    
+    def print_report(self):
+        print("\n" + "="*50)
+        print("CRAWLER ANALYTICS REPORT")
+        print("="*50)
+        print(f"1. Unique pages found: {len(self.unique_urls)}")
+        print(f"2. Longest page: {self.longest_page['url']} ({self.longest_page['word_count']} words)")
+        
+        print("\n3. Top 50 most common words:")
+        for word, count in self.word_frequencies.most_common(50):
+            print(f"   {word}: {count}")
+            
+        print("\n4. Subdomains found in ics.uci.edu:")
+        for subdomain, count in sorted(self.subdomains.items()):
+            print(f"   {subdomain}, {count}")
+        print("="*50 + "\n")
 
 analytics = CrawlerAnalytics()
