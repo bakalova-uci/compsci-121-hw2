@@ -9,6 +9,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 build/
+lacal_libs/
 develop-eggs/
 dist/
 downloads/

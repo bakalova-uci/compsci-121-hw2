@@ -23,7 +23,7 @@ def extract_next_links(url, resp):
         return extracted_links
 
     try:
-        soup = BeautifulSoup(resp.raw_response.content, 'lxml')
+        soup = BeautifulSoup(resp.raw_response.content, 'html.parser')
 
         text_content = soup.get_text(separator=' ', strip=True)
         analytics.process_page(url, text_content)
