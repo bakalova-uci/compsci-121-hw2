@@ -63,7 +63,6 @@ def is_valid(url):
         if not any(domain == d or domain.endswith(d) for d in allowed_domains):
             return False
         
-        decoded_path = unquote(parsed.path.lower())
         crashing_dirs = ['~lboyles', '~alirezs1', '~rvernica', '~sjavanma', '~yonghuaw']
         if any(dir_name in parsed.path for dir_name in crashing_dirs):
             return False
@@ -76,9 +75,6 @@ def is_valid(url):
         if domain in defunct_subdomains:
             return False
         
-        if 'cecs.uci.edu' in domain and ('/enews' in decoded_path or '/publications' in decoded_path):
-            return False
-
         if re.search(r'\?C=[NMSD];O=[AD]', url):
             return False
 
@@ -99,17 +95,12 @@ def is_valid(url):
             '/events/page/',
             'marvin_wsgi_application.py','JMEPopupWeb.py', 'parentForm=', 
             'filter%5B', 'filter[', 'enews-volume', 'search=', 'keywords=', 
-            'orderby=', 'sort=', 'order=',
-            'mailman/',
-            'extreme-stories-'
+            'orderby=', 'sort=', 'order='
         ]
 
         if any(trap in url.lower() for trap in trap_patterns):
             return False
         
-        if re.search(r'/\d{4}/\d{2}/', decoded_path):
-            return False
-
         page_match = re.search(r'/page/(\d+)', url.lower())
         if page_match and int(page_match.group(1)) > 10:
             return False
@@ -132,8 +123,7 @@ def is_valid(url):
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv"
-            + r"|rm|smil|wmv|swf|wma|zip|rar|gz|py|psp|seq|bib|nb|sql|apk|img|war)$"
-            + r"|ppsx|tsv|xml|txt)$", decoded_path)
+            + r"|rm|smil|wmv|swf|wma|zip|rar|gz|py|psp|seq|bib|nb|sql|apk|img|war)$", parsed.path.lower())
 
     except TypeError:
         print ("TypeError for ", parsed)
