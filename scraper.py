@@ -68,12 +68,21 @@ def is_valid(url):
             'duke.ics.uci.edu', 'dblp.ics.uci.edu', 
             'chime.ics.uci.edu', 'cherry.ics.uci.edu',
             'coronavirustwittermap.ics.uci.edu', 'jujube.ics.uci.edu', 
-            'news.nacs.uci.edu', 'asterixdb.ics.uci.edu', 'psearch.ics.uci.edu'
+            'news.nacs.uci.edu', 'asterixdb.ics.uci.edu', 'psearch.ics.uci.edu',
+            'sourcerer.ics.uci.edu', 'gonet.genomics.ics.uci.edu', 
+            'motifmap.ics.uci.edu', 'cgvw.ics.uci.edu', 'tippersweb.ics.uci.edu', 
+            'seraja.ics.uci.edu', 'mt-live.ics.uci.edu', 'hombao.ics.uci.edu', 
+            'www.isg.ics.uci.edu'
         }
 
         if domain in defunct_subdomains:
             return False
         
+        if 'flamingo.ics.uci.edu' in domain and '/localsearch/fuzzysearch' in decoded_path:
+            return False
+        if 'asterix.ics.uci.edu' in domain and '/fuzzyjoin-mapreduce' in decoded_path:
+            return False
+
         crashing_dirs = [
             '~lboyles', '~alirezs1', '~rvernica', '~sjavanma', '~yonghuaw',
             '~jabbarvr', '~rares', '~shengyuj', '~yganjisa', '~jianlinc',
@@ -81,7 +90,11 @@ def is_valid(url):
             '~qliu1', '~akhavans', '~pjsadows', '~gghiasi', '~ajfrank', 
             '~sforouza', '~radum', '~welling', '~abehm', '~salsubai', 
             '~hshirani', '~ics214', '~icetindi', '~yunh', '~wengl', 
-            '~nageshvh', '~ahmadia', '~jianfenj', '~taewok2'
+            '~nageshvh', '~ahmadia', '~jianfenj', '~taewok2',
+            '~mahesh', '~jwickram', '~chair/research', '~ivan', '~cvondric', 
+            '~dramanan', '~peiyunh', '~rjuang', '~bsajadi', '~shallman', 
+            '~mkhademi', '~iporteou', '~hamidb', '~johnsong', '~dorendor', 
+            '~rasadi', '~mamadoud', '~yyang8'
         ]
         if any(dir_name in decoded_path for dir_name in crashing_dirs):
             return False
@@ -95,6 +108,9 @@ def is_valid(url):
             return False
 
         if 'wics.ics.uci.edu' in domain and '/events' in decoded_path:
+            return False
+
+        if re.search(r't?sld\d+\.htm', decoded_path):
             return False
 
         trap_patterns = [
@@ -113,11 +129,15 @@ def is_valid(url):
         if re.search(r'\?C=[NMSD];O=[AD]', url):
             return False
         
+        path_page_match = re.search(r'/page/(\d+)', url.lower())
+        if path_page_match and int(path_page_match.group(1)) > 10:
+            return False
+
         query_page_match = re.search(r'\?page=(\d+)', url.lower())
         if query_page_match and int(query_page_match.group(1)) > 10:
             return False
 
-        query_traps = ['baldipage=']
+        query_traps = ['baldipage=', '?p=', '?page_id=']
         if any(q in url.lower() for q in query_traps):
             return False
 
