@@ -67,7 +67,10 @@ def is_valid(url):
 
         defunct_subdomains = {
             'ibook.ics.uci.edu', 'cybert.ics.uci.edu', 
-            'tippers.ics.uci.edu', 'auge.ics.uci.edu'
+            'tippers.ics.uci.edu', 'auge.ics.uci.edu',
+            'graphmod.ics.uci.edu', 'sli.ics.uci.edu', 
+            'duke.ics.uci.edu', 'dblp.ics.uci.edu', 
+            'chime.ics.uci.edu', 'cherry.ics.uci.edu'
         }
 
         if domain in defunct_subdomains:
@@ -75,9 +78,17 @@ def is_valid(url):
         
         crashing_dirs = [
             '~lboyles', '~alirezs1', '~rvernica', '~sjavanma', '~yonghuaw',
-            '~jabbarvr', '~rares', '~shengyuj', '~yganjisa', '~jianlinc'
+            '~jabbarvr', '~rares', '~shengyuj', '~yganjisa', '~jianlinc',
+            '~akoratti', '~slan', '~ychen', '~agelfand', '~xzhu', '~iypark', 
+            '~qliu1', '~akhavans', '~pjsadows', '~gghiasi', '~ajfrank', 
+            '~sforouza', '~radum', '~welling', '~abehm', '~salsubai', 
+            '~hshirani', '~ics214', '~icetindi', '~yunh', '~wengl', 
+            '~nageshvh', '~ahmadia', '~jianfenj'
         ]
         if any(dir_name in decoded_path for dir_name in crashing_dirs):
+            return False
+
+        if 'cecs.uci.edu' in domain and ('/enews' in decoded_path or '/publications' in decoded_path):
             return False
 
         if re.search(r'/\d{4}-\d{2}-\d{2}', decoded_path):
@@ -93,7 +104,8 @@ def is_valid(url):
             '?replytocom=', 'ical=', 'outlook-ical=', 'mac-ical=', '/day/', '/month/', '/week/',
             '/events/page/', 'marvin_wsgi_application.py', 'jmepopupweb.py', 'parentform=', 
             'filter%5b', 'filter[', 'enews-volume', 'search=', 'keywords=', 
-            'orderby=', 'sort=', 'order=', 'mailman/', 'extreme-stories-'
+            'orderby=', 'sort=', 'order=', 'mailman/', 'extreme-stories-',
+            'timeline?from=', '&precision=', '/raw-attachment/', '/attachment/', '/zip-attachment/'
         ]
 
         if any(trap in url.lower() for trap in trap_patterns):
@@ -106,7 +118,8 @@ def is_valid(url):
         if page_match and int(page_match.group(1)) > 10:
             return False
 
-        if 'baldipage=' in url.lower():
+        query_traps = ['baldipage=']
+        if any(q in url.lower() for q in query_traps):
             return False
 
         if len(url) > 175:
@@ -124,7 +137,7 @@ def is_valid(url):
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1|thmx|mso|arff|rtf|jar|csv"
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz|py|psp|seq|bib|nb|sql|apk|img|war"
-            + r"|ppsx|tsv|xml|txt)$", decoded_path)
+            + r"|ppsx|tsv|xml|txt|java|class|sh|conf|svg|pps)$", decoded_path)
 
     except TypeError:
         print ("TypeError for ", parsed)
