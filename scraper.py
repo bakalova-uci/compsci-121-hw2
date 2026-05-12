@@ -49,18 +49,14 @@ def is_valid(url):
         
         domain = parsed.netloc.lower()
 
-        allowed_domains = [
-            ".ics.uci.edu",
-            "ics.uci.edu",
-            ".cs.uci.edu",
-            "cs.uci.edu",
-            ".informatics.uci.edu",
-            "informatics.uci.edu",
-            ".stat.uci.edu",
-            "stat.uci.edu"
+        valid_roots = [
+            'ics.uci.edu', 
+            'cs.uci.edu', 
+            'informatics.uci.edu', 
+            'stat.uci.edu'
         ]
 
-        if not any(domain == d or domain.endswith(d) for d in allowed_domains):
+        if not any(domain == root or domain.endswith('.' + root) for root in valid_roots):
             return False
         
         decoded_path = unquote(parsed.path.lower())
@@ -72,7 +68,7 @@ def is_valid(url):
             'duke.ics.uci.edu', 'dblp.ics.uci.edu', 
             'chime.ics.uci.edu', 'cherry.ics.uci.edu',
             'coronavirustwittermap.ics.uci.edu', 'jujube.ics.uci.edu', 
-            'news.nacs.uci.edu', 'asterixdb.ics.uci.edu'
+            'news.nacs.uci.edu', 'asterixdb.ics.uci.edu', 'psearch.ics.uci.edu'
         }
 
         if domain in defunct_subdomains:
@@ -108,7 +104,7 @@ def is_valid(url):
             'filter%5b', 'filter[', 'enews-volume', 'search=', 'keywords=', 
             'orderby=', 'sort=', 'order=', 'mailman/', 'extreme-stories-',
             'timeline?from=', '&precision=', '/raw-attachment/', '/attachment/', '/zip-attachment/',
-            '?format=txt', 'wp-login.php', 'redirect_to=', '?eventdisplay='
+            '?format=txt', 'wp-login.php', 'redirect_to=', '?eventdisplay=', '?login='
         ]
 
         if any(trap in url.lower() for trap in trap_patterns):
@@ -117,8 +113,8 @@ def is_valid(url):
         if re.search(r'\?C=[NMSD];O=[AD]', url):
             return False
         
-        page_match = re.search(r'/page/(\d+)', url.lower())
-        if page_match and int(page_match.group(1)) > 10:
+        query_page_match = re.search(r'\?page=(\d+)', url.lower())
+        if query_page_match and int(query_page_match.group(1)) > 10:
             return False
 
         query_traps = ['baldipage=']
