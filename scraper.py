@@ -72,7 +72,7 @@ def is_valid(url):
             'sourcerer.ics.uci.edu', 'gonet.genomics.ics.uci.edu', 
             'motifmap.ics.uci.edu', 'cgvw.ics.uci.edu', 'tippersweb.ics.uci.edu', 
             'seraja.ics.uci.edu', 'mt-live.ics.uci.edu', 'hombao.ics.uci.edu', 
-            'www.isg.ics.uci.edu'
+            'www.isg.ics.uci.edu', 'tutors.ics.uci.edu'
         }
 
         if domain in defunct_subdomains:
