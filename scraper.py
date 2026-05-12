@@ -1,5 +1,5 @@
 import re
-from urllib.parse import urlparse, urljoin
+from urllib.parse import urlparse, urljoin, unquote
 from bs4 import BeautifulSoup
 from analytics import analytics
 
@@ -63,9 +63,7 @@ def is_valid(url):
         if not any(domain == d or domain.endswith(d) for d in allowed_domains):
             return False
         
-        crashing_dirs = ['~lboyles', '~alirezs1', '~rvernica', '~sjavanma', '~yonghuaw']
-        if any(dir_name in parsed.path for dir_name in crashing_dirs):
-            return False
+        decoded_path = unquote(parsed.path.lower())
 
         defunct_subdomains = {
             'ibook.ics.uci.edu', 'cybert.ics.uci.edu', 
@@ -75,30 +73,33 @@ def is_valid(url):
         if domain in defunct_subdomains:
             return False
         
-        if re.search(r'\?C=[NMSD];O=[AD]', url):
+        crashing_dirs = [
+            '~lboyles', '~alirezs1', '~rvernica', '~sjavanma', '~yonghuaw',
+            '~jabbarvr', '~rares', '~shengyuj', '~yganjisa', '~jianlinc'
+        ]
+        if any(dir_name in decoded_path for dir_name in crashing_dirs):
+            return False
+
+        if re.search(r'/\d{4}-\d{2}-\d{2}', decoded_path):
+            return False
+        if re.search(r'/\d{4}/\d{2}/\d{2}', decoded_path):
+            return False
+
+        if 'wics.ics.uci.edu' in domain and '/events' in decoded_path:
             return False
 
         trap_patterns = [
-            'doku.php',      
-            'events/list',   
-            'calendar',      
-            'action=',       
-            'share=',        
-            'version=',      
-            '?replytocom=',  
-            'ical=',
-            'outlook-ical=',
-            'mac-ical=',
-            '/day/',
-            '/month/',
-            '/week/',
-            '/events/page/',
-            'marvin_wsgi_application.py','JMEPopupWeb.py', 'parentForm=', 
-            'filter%5B', 'filter[', 'enews-volume', 'search=', 'keywords=', 
-            'orderby=', 'sort=', 'order='
+            'doku.php', 'events/list', 'calendar', 'action=', 'share=', 'version=',      
+            '?replytocom=', 'ical=', 'outlook-ical=', 'mac-ical=', '/day/', '/month/', '/week/',
+            '/events/page/', 'marvin_wsgi_application.py', 'jmepopupweb.py', 'parentform=', 
+            'filter%5b', 'filter[', 'enews-volume', 'search=', 'keywords=', 
+            'orderby=', 'sort=', 'order=', 'mailman/', 'extreme-stories-'
         ]
 
         if any(trap in url.lower() for trap in trap_patterns):
+            return False
+        
+        if re.search(r'\?C=[NMSD];O=[AD]', url):
             return False
         
         page_match = re.search(r'/page/(\d+)', url.lower())
@@ -108,11 +109,11 @@ def is_valid(url):
         if 'baldipage=' in url.lower():
             return False
 
-        if len(url) > 150:
+        if len(url) > 175:
             return False
             
         path_segments = parsed.path.strip('/').split('/')
-        if len(path_segments) > 10:
+        if len(path_segments) > 12:
             return False
 
         return not re.match(
@@ -121,9 +122,9 @@ def is_valid(url):
             + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
             + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
-            + r"|epub|dll|cnf|tgz|sha1"
-            + r"|thmx|mso|arff|rtf|jar|csv"
-            + r"|rm|smil|wmv|swf|wma|zip|rar|gz|py|psp|seq|bib|nb|sql|apk|img|war)$", parsed.path.lower())
+            + r"|epub|dll|cnf|tgz|sha1|thmx|mso|arff|rtf|jar|csv"
+            + r"|rm|smil|wmv|swf|wma|zip|rar|gz|py|psp|seq|bib|nb|sql|apk|img|war"
+            + r"|ppsx|tsv|xml|txt)$", decoded_path)
 
     except TypeError:
         print ("TypeError for ", parsed)
