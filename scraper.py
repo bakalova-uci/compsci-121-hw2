@@ -70,7 +70,9 @@ def is_valid(url):
             'tippers.ics.uci.edu', 'auge.ics.uci.edu',
             'graphmod.ics.uci.edu', 'sli.ics.uci.edu', 
             'duke.ics.uci.edu', 'dblp.ics.uci.edu', 
-            'chime.ics.uci.edu', 'cherry.ics.uci.edu'
+            'chime.ics.uci.edu', 'cherry.ics.uci.edu',
+            'coronavirustwittermap.ics.uci.edu', 'jujube.ics.uci.edu', 
+            'news.nacs.uci.edu', 'asterixdb.ics.uci.edu'
         }
 
         if domain in defunct_subdomains:
@@ -83,7 +85,7 @@ def is_valid(url):
             '~qliu1', '~akhavans', '~pjsadows', '~gghiasi', '~ajfrank', 
             '~sforouza', '~radum', '~welling', '~abehm', '~salsubai', 
             '~hshirani', '~ics214', '~icetindi', '~yunh', '~wengl', 
-            '~nageshvh', '~ahmadia', '~jianfenj'
+            '~nageshvh', '~ahmadia', '~jianfenj', '~taewok2'
         ]
         if any(dir_name in decoded_path for dir_name in crashing_dirs):
             return False
@@ -105,7 +107,8 @@ def is_valid(url):
             '/events/page/', 'marvin_wsgi_application.py', 'jmepopupweb.py', 'parentform=', 
             'filter%5b', 'filter[', 'enews-volume', 'search=', 'keywords=', 
             'orderby=', 'sort=', 'order=', 'mailman/', 'extreme-stories-',
-            'timeline?from=', '&precision=', '/raw-attachment/', '/attachment/', '/zip-attachment/'
+            'timeline?from=', '&precision=', '/raw-attachment/', '/attachment/', '/zip-attachment/',
+            '?format=txt', 'wp-login.php', 'redirect_to=', '?eventdisplay='
         ]
 
         if any(trap in url.lower() for trap in trap_patterns):
@@ -137,7 +140,7 @@ def is_valid(url):
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1|thmx|mso|arff|rtf|jar|csv"
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz|py|psp|seq|bib|nb|sql|apk|img|war"
-            + r"|ppsx|tsv|xml|txt|java|class|sh|conf|svg|pps)$", decoded_path)
+            + r"|ppsx|tsv|xml|txt|java|class|sh|conf|svg|pps|fig|cls)$", decoded_path)
 
     except TypeError:
         print ("TypeError for ", parsed)
