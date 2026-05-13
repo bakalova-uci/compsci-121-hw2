@@ -98,7 +98,9 @@ def is_valid(url):
             '~mahesh', '~jwickram', '~chair/research', '~ivan', '~cvondric', 
             '~dramanan', '~peiyunh', '~rjuang', '~bsajadi', '~shallman', 
             '~mkhademi', '~iporteou', '~hamidb', '~johnsong', '~dorendor', 
-            '~rasadi', '~mamadoud', '~yyang8', '~rmorshed', '~rdiazgar', '~minhaenl'
+            '~rasadi', '~mamadoud', '~yyang8', '~rmorshed', '~rdiazgar', '~minhaenl',
+            '~mopy', '~seguti', '~qhan', '~sgaffney', '~sswamida', '~dchudova',
+            '~projects/cert', '~kkask/publications'
         ]
         if any(dir_name in decoded_path for dir_name in crashing_dirs):
             return False
