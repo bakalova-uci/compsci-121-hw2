@@ -72,7 +72,11 @@ def is_valid(url):
             'sourcerer.ics.uci.edu', 'gonet.genomics.ics.uci.edu', 
             'motifmap.ics.uci.edu', 'cgvw.ics.uci.edu', 'tippersweb.ics.uci.edu', 
             'seraja.ics.uci.edu', 'mt-live.ics.uci.edu', 'hombao.ics.uci.edu', 
-            'www.isg.ics.uci.edu', 'tutors.ics.uci.edu'
+            'www.isg.ics.uci.edu', 'tutors.ics.uci.edu',
+            'contact14.ics.uci.edu', 'closeup.ics.uci.edu', 'sidepro.proteomics.ics.uci.edu',
+            'tmbpro.ics.uci.edu', 'mine10.ics.uci.edu', 'contact.ics.uci.edu',
+            'old-reactions.ics.uci.edu', 'reactions.ics.uci.edu', 'emj-pc.ics.uci.edu',
+            'sprout.ics.uci.edu', 'cbcl.ics.uci.edu', 'graphics.ics.uci.edu'
         }
 
         if domain in defunct_subdomains:
@@ -94,7 +98,7 @@ def is_valid(url):
             '~mahesh', '~jwickram', '~chair/research', '~ivan', '~cvondric', 
             '~dramanan', '~peiyunh', '~rjuang', '~bsajadi', '~shallman', 
             '~mkhademi', '~iporteou', '~hamidb', '~johnsong', '~dorendor', 
-            '~rasadi', '~mamadoud', '~yyang8'
+            '~rasadi', '~mamadoud', '~yyang8', '~rmorshed', '~rdiazgar', '~minhaenl'
         ]
         if any(dir_name in decoded_path for dir_name in crashing_dirs):
             return False
@@ -156,7 +160,7 @@ def is_valid(url):
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1|thmx|mso|arff|rtf|jar|csv"
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz|py|psp|seq|bib|nb|sql|apk|img|war"
-            + r"|ppsx|tsv|xml|txt|java|class|sh|conf|svg|pps|fig|cls)$", decoded_path)
+            + r"|ppsx|tsv|xml|txt|java|class|sh|conf|svg|pps|fig|cls|mpg)$", decoded_path)
 
     except TypeError:
         print ("TypeError for ", parsed)
