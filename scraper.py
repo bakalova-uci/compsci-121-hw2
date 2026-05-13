@@ -61,6 +61,7 @@ def is_valid(url):
         
         decoded_path = unquote(parsed.path.lower())
 
+        # blacklist of subdomains known to return 601 Cache timeouts/dead ends
         defunct_subdomains = {
             'ibook.ics.uci.edu', 'cybert.ics.uci.edu', 
             'tippers.ics.uci.edu', 'auge.ics.uci.edu',
@@ -82,11 +83,13 @@ def is_valid(url):
         if domain in defunct_subdomains:
             return False
         
+        # block specific defunct routing endpoints that timeout
         if 'flamingo.ics.uci.edu' in domain and '/localsearch/fuzzysearch' in decoded_path:
             return False
         if 'asterix.ics.uci.edu' in domain and '/fuzzyjoin-mapreduce' in decoded_path:
             return False
 
+        # block fragile student/faculty directories returning 500 Server Errors
         crashing_dirs = [
             '~lboyles', '~alirezs1', '~rvernica', '~sjavanma', '~yonghuaw',
             '~jabbarvr', '~rares', '~shengyuj', '~yganjisa', '~jianlinc',
@@ -105,17 +108,21 @@ def is_valid(url):
         if any(dir_name in decoded_path for dir_name in crashing_dirs):
             return False
 
+        # prevents hitting 429 Rate Limits
         if 'cecs.uci.edu' in domain and ('/enews' in decoded_path or '/publications' in decoded_path):
             return False
 
+        # stop infinite crawling of dynamically generated calendar days/months
         if re.search(r'/\d{4}-\d{2}-\d{2}', decoded_path):
             return False
         if re.search(r'/\d{4}/\d{2}/\d{2}', decoded_path):
             return False
 
+        # block for the massive WICS events calendar trap
         if 'wics.ics.uci.edu' in domain and '/events' in decoded_path:
             return False
 
+        # stop crawling individual exported PowerPoint slide HTML pages
         if re.search(r't?sld\d+\.htm', decoded_path):
             return False
 
@@ -132,9 +139,11 @@ def is_valid(url):
         if any(trap in url.lower() for trap in trap_patterns):
             return False
         
+        # block Apache directory index sorting loops
         if re.search(r'\?C=[NMSD];O=[AD]', url):
             return False
         
+        # stop crawling lists/blogs after 10 pages to avoid low-value infinite loops
         path_page_match = re.search(r'/page/(\d+)', url.lower())
         if path_page_match and int(path_page_match.group(1)) > 10:
             return False
@@ -147,9 +156,11 @@ def is_valid(url):
         if any(q in url.lower() for q in query_traps):
             return False
 
+        # cut off absurdly long urls
         if len(url) > 175:
             return False
             
+        # prevent infinite directory trees
         path_segments = parsed.path.strip('/').split('/')
         if len(path_segments) > 12:
             return False
